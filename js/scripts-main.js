@@ -6,7 +6,7 @@
 $(window).load(function() {
 	$('#status').fadeOut();
 	$('#preloader').delay(300).fadeOut('slow');
-	$('body').delay(300).css({'overflow':'visible'});
+	$('body').delay(300).css({'overflow-x':'hidden'});
 	setTimeout(function(){$('.intro-title').addClass('slideInLeft');},100);
 });
 
@@ -22,7 +22,12 @@ if (Modernizr.touch) {
 		$(window).on('load', function(){
 			
 			/*Curtain Effect*/
-			wrapper.css('margin-top', $(window).height()-90);
+			if($(window).width() > 976) {
+				wrapper.css('margin-top', $(window).height()-90);
+			} else {
+				var imgH = document.querySelector('.cycle-sentinel').height;
+				wrapper.css('margin-top', imgH);
+			}
 			
 			/*Stiky Header*/
 			$(".stiky").waypoint('sticky');
@@ -31,14 +36,19 @@ if (Modernizr.touch) {
 		
 		/*Scripts Executed on Page Resize*/	
 		$(window).on('resize', function(){
-			wrapper.css('margin-top', $(window).height()-90);
+			if($(window).width() > 976) {
+				wrapper.css('margin-top', $(window).height()-90);
+			} else {
+				var imgH = document.querySelector('.cycle-sentinel').height;
+				wrapper.css('margin-top', imgH);
+			}
 		});
 
 } else {
 	
 /////////////////////*No-touch Devices*////////////////////////////////////
 	
-		/*Title onScroll Animation*/
+		/*Title onScroll Animation
 		$(window).scroll(function () {
 				var title = $('.intro-title');
 				if ($(this).scrollTop() > 0) {
@@ -52,12 +62,14 @@ if (Modernizr.touch) {
 		/*Scripts Executed on Page Load*/
 		var wrapper = $('#wrapper');
 		$(window).on('load', function(){
-			
+			console.log("load" + $(window).height());
 			/*Curtain Effect*/
 			if($(window).width() > 976) {
+				console.log(">" + $(window).height());
 				wrapper.css('margin-top', $(window).height()-90);
 			} else {
-				wrapper.css('margin-top', $(window).height());
+				var imgH = document.querySelector('.cycle-sentinel').height;
+				wrapper.css('margin-top', imgH);
 			}
 			
 			/*Stiky Header*/
@@ -76,7 +88,8 @@ if (Modernizr.touch) {
 			if($(window).width() > 976) {
 				wrapper.css('margin-top', $(window).height()-90);
 			} else {
-				wrapper.css('margin-top', $(window).height());
+				var imgH = document.querySelector('.cycle-sentinel').height;
+				wrapper.css('margin-top', imgH);
 			}
 		});
 
@@ -96,10 +109,10 @@ $(document).ready(function(e) {
 			$('.dropdown').removeClass('open');	 
 	 });
 	
-	/*Intro Fullscreen Slideshow Initializing*/
+	/*Intro Fullscreen Slideshow Initializing
 	if ($(".intro-slideshow ul li").length > 0) {
         slider.bgSlider($(".intro-slideshow ul li").length);
-    }
+    }*/
 	
 	////////////////////////////////////////////////////////////
 	//INTERNAL ANCHOR LINKS SCROLLING (PAGINATION)
@@ -152,13 +165,14 @@ $(document).ready(function(e) {
 	});
 	////////////////////////////////////////////////////////////////////
 
-	/*About Slider*/
+	/*About Slider*
 	$('.about-slider-inner, .info-slider').each(function(index) {
 			$(this).cycle({
 					fx:'fade',
 					speed: 800,
-					timeout: 0,
+					timeout: 7000,
 					pager: '.pager',
+					pause: 1,
 					pagerAnchorBuilder: function(i) {
 				if (index == 0)
 					// for first slideshow, return a new anchro
@@ -167,11 +181,11 @@ $(document).ready(function(e) {
 				return '.pager a:eq('+i+')';
         	}
 			});
-  });
+  });*/
 	
 	
 	//Enable swiping (News Slider)
-	$(".carousel-inner").swipe( {
+	/*$(".carousel-inner").swipe( {
 		//Generic swipe handler for all directions
 		swipeRight:function(event, direction, distance, duration, fingerCount) {
 			$(this).parent().carousel('prev'); 
@@ -181,7 +195,7 @@ $(document).ready(function(e) {
 		},
 		//Default is 75px, set to 0 for demo so any distance triggers swipe
 		threshold:0
-	});
+	});*/
 					
 						
 	/*FORMS*/
@@ -293,48 +307,7 @@ $(document).ready(function(e) {
 });/*/Document ready*/
 
 /*Intro Fullscreen Slideshow Function*/
-var slider = {
-    currentSlide: 0,
-    currentTitle: 0,
-    timeOut: 7000,
-    pred2: true,
-    offset: 0,
-    selector: '.intro-slideshow ul',
-    currentCls: "current",
-    countItems: 0,
-    titleSelector: '',
-    titleActive: '',
 
-    bgSlider: function (countItems) {
-        var me = this;
-        me.countItems = countItems || me.countItems;
-        me._next();
-        me._timeoutId = setTimeout(function(){me.bgSlider();}, me.timeOut);
-    },
-    _next: function(){
-        var me = this;
-        if (me.currentSlide === me.countItems) {
-            me.currentSlide = 1;
-        } else {
-            me.currentSlide ++;
-        }
-        me.doSlide();
-    },
-    nextSlide: function(){
-        var me = this;
-        clearTimeout(me._timeoutId);
-        me.bgSlider();
-    },
-    doSlide: function(){
-        var me = this;
-        // background
-        $(me.selector + " li").removeClass(me.currentCls);
-        $(me.selector + " li:nth-child(" + me.currentSlide + ")").addClass(me.currentCls);
-        // title
-        $(me.titleSelector).removeClass(me.titleActive);
-        $(me.titleSelector + ":nth-child(" + me.currentSlide + ")").addClass(me.titleActive);
-    }
-};
 
 // jQuery Input Hints plugin by Rob Volk
 (function (n) { n.fn.inputHints = function () { function r(t) { jQuery(t).val() == "" && jQuery(t).val(n(t).attr("placeholder")).addClass("hint") } function i(t) { n(t).val() == n(t).attr("placeholder") && n(t).val("").removeClass("hint") } var t = n(this); return t.each(function () { r(this) }), t.closest("form").submit(function () { return t.each(function () { i(this) }), !0 })
@@ -352,14 +325,19 @@ function initialize() {
 	var map_options = {
 		center: latlng,
 		zoom: 14,
-		disableDefaultUI: true
+		scrollwheel: false,
+		navigationControl: true,
+		mapTypeControl: false,
+		scaleControl: true,
+		draggable: false,
+		mapTypeId: google.maps.MapTypeId.ROADMAP
 	}
 	map = new google.maps.Map(map_canvas, map_options);
 	codeAddress();
 }
 
 function codeAddress() {
-	var image = 'img/marker.png';
+  var image = 'img/marker.png';
   var address = query;
   geocoder.geocode( { 'address': address}, function(results, status) {
     if (status == google.maps.GeocoderStatus.OK) {
@@ -368,7 +346,7 @@ function codeAddress() {
           map: map,
           position: results[0].geometry.location,
 					icon: image,
-					title: 'Eattie Restaurant'
+					title: 'Casa Itaici Espaço de Eventos'
       });
     } else {
       alert('Geocode was not successful for the following reason: ' + status);
